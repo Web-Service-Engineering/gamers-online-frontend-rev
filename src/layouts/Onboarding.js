@@ -6,12 +6,10 @@ import { Container, Row, Col } from "reactstrap";
 // core components
 import AuthNavbar from "components/Navbars/AuthNavbar.js";
 import AuthFooter from "components/Footers/AuthFooter.js";
-import Login from "views/examples/Login";
-import Register from "views/examples/Register";
 
 import routes from "routes.js";
 
-const Auth = (props) => {
+const Onboarding = (props) => {
     const mainContent = React.useRef(null);
     const location = useLocation();
 
@@ -29,20 +27,18 @@ const Auth = (props) => {
 
     const getRoutes = (routes) => {
         return routes.map((prop, key) => {
-            if (prop.layout === "/auth") {
+            if (prop.layout === "/onboarding") {
                 return (
                     <Route
                         path={prop.layout + prop.path}
                         component={(routeProps) => {
-                            if (prop.name === "Login") {
-                                return <prop.component {...routeProps} onLoginSuccess={props.onLoginSuccess} />;
-                            } else if (prop.name === "New Profile") {
-                                return <prop.component {...routeProps} onProfileSuccess={props.onProfileSuccess} />;
-                            } else {
-                                return <prop.component {...routeProps} />;
-                            }
+                            // if (prop.name === "New Profile") {
+                            //     return <prop.component {...routeProps} onProfileSuccess={props.onProfileSuccess} />;
+                            // } else {
+                            return <prop.component {...routeProps} />;
+                            // }
                         }}
-                        // component={prop.component}
+                        //component={prop.component}
                         key={key}
                     />
                 );
@@ -55,7 +51,7 @@ const Auth = (props) => {
     return (
         <>
             <div className="main-content" ref={mainContent}>
-                {/* <AuthNavbar /> */}
+                <AuthNavbar /> 
                 <div className="header bg-gradient-warning py-7 py-lg-8">
                     <Container>
                         <div className="header-body text-center mb-7">
@@ -82,20 +78,9 @@ const Auth = (props) => {
                 {/* Page content */}
                 <Container className="mt--8 pb-5">
                     <Row className="justify-content-center">
-                        {/* <Switch>
-                            {getRoutes(routes)}
-                            <Redirect from="/auth" to="/auth/login" />
-                        </Switch> */}
                         <Switch>
-                            <Route
-                                path="/auth/login"
-                                render={(routeProps) => <Login {...routeProps} onLoginSuccess={props.onLoginSuccess} />}
-                            />
-                            {/* <Route path="/auth/login" component={Login} onLoginSuccess={props.onLoginSuccess} /> */}
-                            <Route path="/auth/register" component={Register} />
-                            {/* <Route path="/auth/login" component={Login} onLoginSuccess={props.onLoginSuccess}/> */}
-                            {/* {getRoutes(routes)} */}
-                            <Redirect from="/auth" to="/auth/login" />
+                            {getRoutes(routes)}
+                            {/* <Redirect from="*" to="/onboarding/profile-register" /> */}
                         </Switch>
                     </Row>
                 </Container>
@@ -105,4 +90,4 @@ const Auth = (props) => {
     );
 };
 
-export default Auth;
+export default Onboarding;
