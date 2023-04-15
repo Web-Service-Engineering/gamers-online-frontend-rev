@@ -37,7 +37,7 @@ const Login = (props) => {
                 if (response.data.status == "fail") {
                     setError(response.data.message);
                 } else {
-                    const Authorization = response.data.Authorization;
+                    const {Authorization} = response.data;
                     authService.setToken(Authorization);
                     //console.log(authService.getUserId());
                     props.onLoginSuccess(Authorization);
