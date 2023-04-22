@@ -8,8 +8,7 @@ const API_BASE_URL = "http://127.0.0.1:5000/"; // Replace with your Flask API UR
 const ProfileService = {
     getProfileById: async (accountId) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}profile/${accountId}`);
-            return response;
+            return await axios.get(`${API_BASE_URL}profile/${accountId}`);
         } catch (error) {
             return false
         }
@@ -24,8 +23,14 @@ const ProfileService = {
     },
     getProfileFriendsById: async (accountId) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}profile/friends/${accountId}`);
-            return response.data;
+            return await axios.get(`${API_BASE_URL}profile/friends/${accountId}`);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    },
+    getLikeMindedPlayers: async (accountId) => {
+        try {
+            return await axios.get(`${API_BASE_URL}profile/players/${accountId}`);
         } catch (error) {
             console.error("Error:", error);
         }
@@ -37,6 +42,20 @@ const ProfileService = {
             return response.data;
         } catch (error) {
             console.error("Create error:", error);
+        }
+    },
+    addFriend: async (data) => {
+        try {
+            return await axios.post(`${API_BASE_URL}friends/`, { ...data });
+        } catch (error) {
+            console.error("add friend error:", error);
+        }
+    },
+    removeFriend: async (data) => {
+        try {
+            return await axios.put(`${API_BASE_URL}friends/`, { ...data });
+        } catch (error) {
+            console.error("remove friend error:", error);
         }
     },
     createBartleTest: async (data) => {

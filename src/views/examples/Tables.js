@@ -22,8 +22,49 @@ import {
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.js";
+import authService from "services/authService";
+import ProfileService from "services/ProfileService";
+import { useState, useEffect } from "react";
+import ModalAddFriendSuccess from "components/Modals/ModalAddFriendSuccess";
 
 const Tables = () => {
+    const [friends, setFriends] = useState([]);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [modalOpen, setModalOpen] = useState(false);
+    const [background, setBackground] = useState("danger");
+
+    // if (window.Chart) {
+    //     parseOptions(Chart, chartOptions());
+    // }
+
+    const toggleModal = () => {
+        setModalOpen(!modalOpen);
+    };
+
+    const removeFriendHandler = (id) => {
+        const dataForFriendship = {
+            current_account_id: authService.getUserId(),
+            friend_account_id: +id,
+        };
+
+        //console.log(dataForFriendship)
+
+        ProfileService.removeFriend(dataForFriendship).then((response) => {
+            //console.log(response.data);
+            if (response.data.status === "success") {
+                setSuccessMessage(response.data.message);
+                const newFriends = friends.filter((friend) => friend.account_id !== id);
+                setFriends(newFriends);
+            }
+        });
+    };
+
+    useEffect(() => {
+        const responseAccount = ProfileService.getProfileFriendsById(authService.getUserId()).then((response) => {
+            console.log(response.data);
+            setFriends([...response.data]);
+        });
+    }, []);
     return (
         <>
             <Header />
@@ -42,14 +83,17 @@ const Tables = () => {
                                         <tr>
                                             <th scope="col">Username</th>
                                             <th scope="col">Status</th>
+                                            <th scope="col">Remove</th>
+                                            <th scope="col">Chat</th>
                                             <th scope="col" />
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <th scope="row">
-                                                <Media className="align-items-center">
-                                                    <a
+                                        {friends.map((friend) => (
+                                            <tr key={friend.account_id}>
+                                                <th scope="row">
+                                                    <Media className="align-items-center">
+                                                        {/* <a
                                                         className="avatar rounded-circle mr-3"
                                                         href="#pablo"
                                                         onClick={(e) => e.preventDefault()}>
@@ -57,19 +101,56 @@ const Tables = () => {
                                                             alt="..."
                                                             src={require("../../assets/img/theme/bootstrap.jpg")}
                                                         />
-                                                    </a>
-                                                    <Media>
-                                                        <span className="mb-0 text-sm">Friend 1</span>
+                                                    </a> */}
+                                                        <Media>
+                                                            <span className="mb-0 text-sm">{friend.friendly_name}</span>
+                                                        </Media>
                                                     </Media>
-                                                </Media>
-                                            </th>
-                                            <td>
-                                                <Badge color="" className="badge-dot mr-4">
-                                                    <i className="bg-warning" />
-                                                    pending
-                                                </Badge>
-                                            </td>
-                                            <td className="text-right">
+                                                </th>
+                                                <td>
+                                                    <Badge color="" className="badge-dot mr-4">
+                                                        <i className="bg-warning" />
+                                                        You are friends
+                                                    </Badge>
+                                                </td>
+                                                <td>
+                                                    <Button
+                                                        color="danger"
+                                                        href="#pablo"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            //setFriendId(player.account_id);
+                                                            removeFriendHandler(friend.account_id);
+                                                            toggleModal();
+                                                        }}
+                                                        size="sm">
+                                                        Remove friend
+                                                    </Button>
+                                                    {/* <Button
+                                                    color="danger"
+                                                    href="#pablo"
+                                                    onClick={(e) => e.preventDefault()}
+                                                    size="sm">
+                                                    Remove Friend
+                                                </Button> */}
+                                                </td>
+                                                <td>
+                                                    <Button
+                                                        color="success"
+                                                        href="#pablo"
+                                                        onClick={(e) => e.preventDefault()}
+                                                        size="sm">
+                                                        Chat
+                                                    </Button>
+                                                    {/* <Button
+                                                    color="danger"
+                                                    href="#pablo"
+                                                    onClick={(e) => e.preventDefault()}
+                                                    size="sm">
+                                                    Remove Friend
+                                                </Button> */}
+                                                </td>
+                                                {/* <td className="text-right">
                                                 <UncontrolledDropdown>
                                                     <DropdownToggle
                                                         className="btn-icon-only text-light"
@@ -89,11 +170,12 @@ const Tables = () => {
                                                         </DropdownItem>
                                                     </DropdownMenu>
                                                 </UncontrolledDropdown>
-                                            </td>
-                                        </tr>
+                                            </td> */}
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </Table>
-                                <CardFooter className="py-4">
+                                {/* <CardFooter className="py-4">
                                     <nav aria-label="...">
                                         <Pagination
                                             className="pagination justify-content-end mb-0"
@@ -130,12 +212,12 @@ const Tables = () => {
                                             </PaginationItem>
                                         </Pagination>
                                     </nav>
-                                </CardFooter>
+                                </CardFooter> */}
                             </Card>
                         </div>
                     </Col>
 
-                    <Col>
+                    {/* <Col>
                         <div className="col">
                             <Card className="bg-default shadow">
                                 <CardHeader className="bg-transparent border-0">
@@ -248,10 +330,16 @@ const Tables = () => {
                                 </CardFooter>
                             </Card>
                         </div>
-                    </Col>
+                    </Col> */}
                 </Row>
                 {/* Dark table */}
                 <Row className="mt-5"></Row>
+                <ModalAddFriendSuccess
+                    isOpen={modalOpen}
+                    toggleModal={toggleModal}
+                    message={successMessage}
+                    background={background}
+                />
             </Container>
         </>
     );

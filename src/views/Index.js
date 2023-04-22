@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import ProfileService from "services/ProfileService";
+import authService from "services/authService";
 // node.js library that concatenates classes (strings)
 import classnames from "classnames";
 // javascipt plugin for creating charts
@@ -23,22 +25,58 @@ import {
 
 // core components
 import { chartOptions, parseOptions, chartExample1, chartExample2 } from "variables/charts.js";
+import ModalAddFriendSuccess from "components/Modals/ModalAddFriendSuccess";
 
 import Header from "components/Headers/Header.js";
 
 const Index = (props) => {
     const [activeNav, setActiveNav] = useState(1);
-    const [chartExample1Data, setChartExample1Data] = useState("data1");
+    const [likePlayers, setLikePlayers] = useState([]);
+    const [friendId, setFriendId] = useState(-1);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [modalOpen, setModalOpen] = useState(false);
+    const [background, setBackground] = useState("danger");
 
     // if (window.Chart) {
     //     parseOptions(Chart, chartOptions());
     // }
 
-    const toggleNavs = (e, index) => {
-        e.preventDefault();
-        setActiveNav(index);
-        setChartExample1Data("data" + index);
+    const toggleModal = () => {
+        setModalOpen(!modalOpen);
     };
+
+    const addFriendHandler = (id) => {
+        const dataForFriendship = {
+            current_account_id: authService.getUserId(),
+            friend_account_id: +id,
+        };
+
+        //console.log(dataForFriendship)
+
+        ProfileService.addFriend(dataForFriendship).then((response) => {
+            //console.log(response.data);
+            if (response.data.status === "success") {
+                setSuccessMessage(response.data.message);
+                setBackground("success");
+                const newPlayers = likePlayers.filter((player) => player.account_id !== id);
+                setLikePlayers((previousPlayers) => {
+                    return [...newPlayers];
+                });
+            }
+        });
+    };
+
+    const convertPercentage = (numberInString) => {
+        const number = parseFloat(numberInString) * 100;
+        return number.toFixed(2);
+    };
+
+    useEffect(() => {
+        const responseAccount = ProfileService.getLikeMindedPlayers(authService.getUserId()).then((response) => {
+            // console.log(response.data);
+            setLikePlayers([...response.data]);
+        });
+    }, []);
     return (
         <>
             <Header />
@@ -66,34 +104,52 @@ const Index = (props) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">Test Name</th>
-                                        <td>35%</td>
-                                        <td>5%</td>
-                                        <td>46,53%</td>
-                                        <td>46,53%</td>
-                                        <td>
-                                            {/* <Button
-                                                color="primary"
-                                                href="#pablo"
-                                                onClick={(e) => e.preventDefault()}
-                                                size="sm">
-                                                Add Friend
-                                            </Button> */}
-                                            <Button
-                                                color="danger"
-                                                href="#pablo"
-                                                onClick={(e) => e.preventDefault()}
-                                                size="sm">
-                                                Remove Friend
-                                            </Button>
-                                        </td>
-                                    </tr>
+                                    {likePlayers
+                                        .filter(
+                                            (player) =>
+                                                player.account_id.toString() !== authService.getUserId().toString()
+                                        )
+                                        .map((player) => (
+                                            <tr key={player.account_id}>
+                                                <th scope="row">{player.friendly_name}</th>
+                                                <td>{convertPercentage(player.achiever_pct)}%</td>
+                                                <td>{convertPercentage(player.explorer_pct)}%</td>
+                                                <td>{convertPercentage(player.killer_pct)}%</td>
+                                                <td>{convertPercentage(player.socializer_pct)}%</td>
+                                                <td>
+                                                    <Button
+                                                        color="warning"
+                                                        href="#pablo"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            //setFriendId(player.account_id);
+                                                            addFriendHandler(player.account_id);
+                                                            toggleModal();
+                                                        }}
+                                                        size="sm">
+                                                        Add Friend
+                                                    </Button>
+                                                    {/* <Button
+                                                    color="danger"
+                                                    href="#pablo"
+                                                    onClick={(e) => e.preventDefault()}
+                                                    size="sm">
+                                                    Remove Friend
+                                                </Button> */}
+                                                </td>
+                                            </tr>
+                                        ))}
                                 </tbody>
                             </Table>
                         </Card>
                     </Col>
                 </Row>
+                <ModalAddFriendSuccess
+                    isOpen={modalOpen}
+                    toggleModal={toggleModal}
+                    message={successMessage}
+                    background={background}
+                />
             </Container>
         </>
     );

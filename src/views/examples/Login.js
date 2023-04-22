@@ -37,7 +37,7 @@ const Login = (props) => {
                 if (response.data.status == "fail") {
                     setError(response.data.message);
                 } else {
-                    const {Authorization} = response.data;
+                    const { Authorization } = response.data;
                     authService.setToken(Authorization);
                     //console.log(authService.getUserId());
                     props.onLoginSuccess(Authorization);
@@ -53,11 +53,26 @@ const Login = (props) => {
     };
 
     const handleRedirect = async (user_id) => {
-        const responseData = await ProfileService.getProfileById(user_id);
-        if (responseData.data.account_id === null) {
-            nav.push("/onboarding/profile-register");
-        } else {
-            nav.push("/");
+        try {
+            // const responseData = await ProfileService.getProfileById(user_id);
+            await ProfileService.getProfileById(user_id).then((response) => {
+                if (response.data.account_id === null) {
+                    nav.push("/onboarding/profile-register");
+                } else {
+                    nav.push("/");
+                }
+            });
+            // if (responseData.data.account_id === null) {
+            //     nav.push("/onboarding/profile-register");
+            // } else {
+            //     nav.push("/");
+            // }
+        } catch (error) {
+            console.log(error.message);
+            const errorMessage = "Cannot read properties of undefined (reading 'account_id')";
+            if (error.message === errorMessage) {
+                nav.push("/onboarding/profile-register");
+            }
         }
     };
 
