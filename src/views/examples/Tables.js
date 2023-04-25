@@ -93,15 +93,7 @@ const Tables = () => {
                                             <tr key={friend.account_id}>
                                                 <th scope="row">
                                                     <Media className="align-items-center">
-                                                        {/* <a
-                                                        className="avatar rounded-circle mr-3"
-                                                        href="#pablo"
-                                                        onClick={(e) => e.preventDefault()}>
-                                                        <img
-                                                            alt="..."
-                                                            src={require("../../assets/img/theme/bootstrap.jpg")}
-                                                        />
-                                                    </a> */}
+
                                                         <Media>
                                                             <span className="mb-0 text-sm">{friend.friendly_name}</span>
                                                         </Media>
