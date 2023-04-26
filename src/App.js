@@ -1,7 +1,6 @@
 // src/App.js
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, Switch, Redirect, useHistory } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
 import "assets/plugins/nucleo/css/nucleo.css";
@@ -11,20 +10,16 @@ import "assets/scss/argon-dashboard-react.scss";
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
 import Onboarding from "layouts/Onboarding";
-import Login from "components/Footers/AuthFooter";
-import Register from "views/examples/Register";
-import ProfileFirstTime from "views/examples/ProfileFirstTime";
 import UserContext from "services/UserContext";
 import ProtectedRoute from "services/ProtectedRoute";
 import authService from "services/authService";
-import ProfileService from "services/ProfileService";
 import { Progress } from "reactstrap";
 
 const App = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const nav = useHistory();
+    //const nav = useHistory();
 
     const onLoginSuccess = (token) => {
         const decoded = jwt_decode(token);
@@ -32,11 +27,11 @@ const App = () => {
         //const responseData = ProfileService.getProfileById(authService.getUserId());
     };
 
-    const onProfileSuccess = (token) => {
-        const decoded = jwt_decode(token);
-        setUser(decoded);
+    // const onProfileSuccess = (token) => {
+    //     const decoded = jwt_decode(token);
+    //     setUser(decoded);
         //const responseData = ProfileService.getProfileById(authService.getUserId());
-    };
+    //};
 
     useEffect(() => {
         const token = authService.getToken();

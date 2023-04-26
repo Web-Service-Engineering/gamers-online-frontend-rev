@@ -2,7 +2,6 @@
 import {
     Button,
     Card,
-    CardHeader,
     CardBody,
     FormGroup,
     Form,
@@ -20,6 +19,8 @@ import authService from "services/authService";
 import { Link, useHistory } from "react-router-dom";
 
 import ProfileService from "services/ProfileService";
+import createOrUpdateChatEngineUser from "services/chatEngineService";
+
 
 const Login = (props) => {
     const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ const Login = (props) => {
             const response = await authService.login(email, password).then((response) => {
                 setError(response.data.message);
 
-                if (response.data.status == "fail") {
+                if (response.data.status === "fail") {
                     setError(response.data.message);
                 } else {
                     const { Authorization } = response.data;
@@ -59,6 +60,7 @@ const Login = (props) => {
                 if (response.data.account_id === null) {
                     nav.push("/onboarding/profile-register");
                 } else {
+                    createOrUpdateChatEngineUser(response.data.friendly_name, email);
                     nav.push("/");
                 }
             });
