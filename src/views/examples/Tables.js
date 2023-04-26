@@ -26,16 +26,26 @@ import authService from "services/authService";
 import ProfileService from "services/ProfileService";
 import { useState, useEffect } from "react";
 import ModalAddFriendSuccess from "components/Modals/ModalAddFriendSuccess";
+import { Link, useHistory } from "react-router-dom";
 
 const Tables = () => {
     const [friends, setFriends] = useState([]);
     const [successMessage, setSuccessMessage] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
     const [background, setBackground] = useState("danger");
+    const [selectedFriend, setSelectedFriend] = useState("");
+    const nav = useHistory();
 
     // if (window.Chart) {
     //     parseOptions(Chart, chartOptions());
     // }
+
+    const startChat = (friendUsername) => {
+        nav.push({
+            pathname: "/admin/chat",
+            state: { friendUsername },
+        });
+    };
 
     const toggleModal = () => {
         setModalOpen(!modalOpen);
@@ -93,7 +103,6 @@ const Tables = () => {
                                             <tr key={friend.account_id}>
                                                 <th scope="row">
                                                     <Media className="align-items-center">
-
                                                         <Media>
                                                             <span className="mb-0 text-sm">{friend.friendly_name}</span>
                                                         </Media>
@@ -130,18 +139,20 @@ const Tables = () => {
                                                     <Button
                                                         color="success"
                                                         href="#pablo"
-                                                        onClick={(e) => e.preventDefault()}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            //setSelectedFriend(friend.friendly_name);
+                                                            startChat(friend.friendly_name);
+                                                            //nav.push("/chat", { selectedFriend });
+                                                        }}
                                                         size="sm">
                                                         Chat
                                                     </Button>
-                        
                                                 </td>
-                                      
                                             </tr>
                                         ))}
                                     </tbody>
                                 </Table>
-                        
                             </Card>
                         </div>
                     </Col>

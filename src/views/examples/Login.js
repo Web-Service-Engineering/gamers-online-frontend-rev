@@ -20,6 +20,8 @@ import authService from "services/authService";
 import { Link, useHistory } from "react-router-dom";
 
 import ProfileService from "services/ProfileService";
+import createOrUpdateChatEngineUser from "services/chatEngineService";
+
 
 const Login = (props) => {
     const [email, setEmail] = useState("");
@@ -59,6 +61,7 @@ const Login = (props) => {
                 if (response.data.account_id === null) {
                     nav.push("/onboarding/profile-register");
                 } else {
+                    createOrUpdateChatEngineUser(response.data.friendly_name, email);
                     nav.push("/");
                 }
             });
