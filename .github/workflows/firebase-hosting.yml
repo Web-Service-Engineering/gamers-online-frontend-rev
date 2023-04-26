@@ -3,9 +3,6 @@ name: Deploy to Firebase Hosting
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
