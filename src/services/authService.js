@@ -46,7 +46,7 @@ const authService = {
                     }
                 );
 
-                if (response.status == 200) {
+                if (response.status === 200) {
                     authService.removeToken();
                 } else {
                     // handle error

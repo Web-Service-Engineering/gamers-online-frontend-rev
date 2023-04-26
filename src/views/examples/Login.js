@@ -2,7 +2,6 @@
 import {
     Button,
     Card,
-    CardHeader,
     CardBody,
     FormGroup,
     Form,
@@ -36,7 +35,7 @@ const Login = (props) => {
             const response = await authService.login(email, password).then((response) => {
                 setError(response.data.message);
 
-                if (response.data.status == "fail") {
+                if (response.data.status === "fail") {
                     setError(response.data.message);
                 } else {
                     const { Authorization } = response.data;

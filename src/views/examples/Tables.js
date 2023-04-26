@@ -3,20 +3,10 @@ import {
     Badge,
     Card,
     CardHeader,
-    CardFooter,
-    DropdownMenu,
-    DropdownItem,
-    UncontrolledDropdown,
-    DropdownToggle,
     Media,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Progress,
     Table,
     Container,
     Row,
-    UncontrolledTooltip,
     Col,
     Button,
 } from "reactstrap";
@@ -26,14 +16,14 @@ import authService from "services/authService";
 import ProfileService from "services/ProfileService";
 import { useState, useEffect } from "react";
 import ModalAddFriendSuccess from "components/Modals/ModalAddFriendSuccess";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const Tables = () => {
     const [friends, setFriends] = useState([]);
     const [successMessage, setSuccessMessage] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
     const [background, setBackground] = useState("danger");
-    const [selectedFriend, setSelectedFriend] = useState("");
+    //const [selectedFriend, setSelectedFriend] = useState("");
     const nav = useHistory();
 
     // if (window.Chart) {

@@ -1,36 +1,19 @@
 // reactstrap components
-import {
-    Button,
-    Card,
-    CardHeader,
-    CardBody,
-    FormGroup,
-    Form,
-    Input,
-    InputGroupAddon,
-    InputGroupText,
-    InputGroup,
-    Row,
-    Col,
-} from "reactstrap";
 import styles from "./chat.module.css";
 
 import React, { useState, useEffect } from "react";
 import authService from "services/authService";
-import { PrettyChatWindow } from "react-chat-engine-pretty";
 import { ChatEngine, getOrCreateChat } from "react-chat-engine";
 
-import { Link, useHistory } from "react-router-dom";
 
 import ProfileService from "services/ProfileService";
 import createOrUpdateChatEngineUser from "services/chatEngineService";
 import Header from "components/Headers/Header";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 
-const CHAT_ENGINE_API_BASE_URL = "https://api.chatengine.io";
+//const CHAT_ENGINE_API_BASE_URL = "https://api.chatengine.io";
 const PROJECT_ID = "9a49e386-12b3-4e5c-8f2f-63c741ba08a5";
-const PROJECT_SECRET = "5b8e1c78-518e-44e3-abc8-e32580dc88ab";
+//const PROJECT_SECRET = "5b8e1c78-518e-44e3-abc8-e32580dc88ab";
 
 const Chats = (props) => {
     const [userName, setUsername] = useState("");
@@ -70,6 +53,7 @@ const Chats = (props) => {
         // }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const friendUsername = location.state && location.state.friendUsername;
         if (friendUsername) {

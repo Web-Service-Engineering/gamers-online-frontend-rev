@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const CHAT_ENGINE_API_BASE_URL = 'https://api.chatengine.io';
-const PROJECT_ID = '9a49e386-12b3-4e5c-8f2f-63c741ba08a5';
+//const PROJECT_ID = '9a49e386-12b3-4e5c-8f2f-63c741ba08a5';
 const PROJECT_SECRET = '5b8e1c78-518e-44e3-abc8-e32580dc88ab';
 
 const createOrUpdateChatEngineUser = async (username, email) => {
